@@ -8,13 +8,15 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 public class FirstTest {
 
 
     @Test
-    public void test(){
+    public void test() {
+        HashMap<String, Integer> cart = new HashMap<>();
         System.setProperty("webdriver.chrome.driver", "drv/chromedriver.exe");
         WebDriver driver = new ChromeDriver();
         driver.get("https://www.kfc.ru/");
@@ -24,12 +26,18 @@ public class FirstTest {
 
         driver.findElement(By.xpath("//button[text()='Соглашаюсь']")).click();
         driver.findElement(By.xpath("//button[text()='Да, все верно']")).click();
+        Integer price = Integer.valueOf(driver.findElement(By.xpath("//*[text()='Шефбургер Де Люкс']/..//span[1]")).getText());
+        if (cart.containsKey("Шефбургер Де Люкс")) {
+            cart.put("Шефбургер Де Люкс", cart.get("Шефбургер Де Люкс") + price);
+        } else {
+            cart.put("Шефбургер Де Люкс", price);
+        }
 
         new WebDriverWait(driver, 10)
                 .ignoring(WebDriverException.class)
                 .until(d -> {
-                    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(false)", driver.findElement(By.xpath("//*[text()='Шефбургер Де Люкс']/..//button")));
-                    driver.findElement(By.xpath("//*[text()='Шефбургер Де Люкс']/..")).click();
+                    ((JavascriptExecutor) d).executeScript("arguments[0].scrollIntoView(false)", d.findElement(By.xpath("//*[text()='Шефбургер Де Люкс']/..//button")));
+                    d.findElement(By.xpath("//*[text()='Шефбургер Де Люкс']/..")).click();
                     return true;
                 });
 
@@ -39,12 +47,40 @@ public class FirstTest {
         new WebDriverWait(driver, 10)
                 .ignoring(WebDriverException.class)
                 .until(d -> {
-                    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(false)",   driver.findElement(By.xpath("//*[contains(text(),'В корзину')]")));
-                    driver.findElement(By.xpath("//*[contains(text(),'В корзину')]")).click();
-            return true;
-        });
+                    ((JavascriptExecutor) d).executeScript("arguments[0].scrollIntoView(false)", d.findElement(By.xpath("//*[contains(text(),'В корзину')]")));
+                    d.findElement(By.xpath("//*[contains(text(),'В корзину')]")).click();
+                    return true;
+                });
 
         driver.findElement(By.xpath("//span[contains(text(),'Доставка')]")).click();
+        price = Integer.valueOf(driver.findElement(By.xpath("//*[text()='Песто бургер']/..//span[1]")).getText());
+
+        if (cart.containsKey("Песто бургер")) {
+            cart.put("Песто бургер", cart.get("Песто бургер") + price);
+        } else {
+            cart.put("Песто бургер", price);
+        }
+
+        new WebDriverWait(driver, 10)
+                .ignoring(WebDriverException.class)
+                .until(d -> {
+                    ((JavascriptExecutor) d).executeScript("arguments[0].scrollIntoView(false)", d.findElement(By.xpath("//*[text()='Песто бургер']/..//button")));
+                    d.findElement(By.xpath("//*[text()='Песто бургер']/..")).click();
+                    return true;
+                });
+
+        new WebDriverWait(driver, 10)
+                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//h1[text()='Песто бургер']")));
+
+        new WebDriverWait(driver, 10)
+                .ignoring(WebDriverException.class)
+                .until(d -> {
+                    ((JavascriptExecutor) d).executeScript("arguments[0].scrollIntoView(false)", d.findElement(By.xpath("//*[contains(text(),'В корзину')]")));
+                    d.findElement(By.xpath("//*[contains(text(),'В корзину')]")).click();
+                    return true;
+                });
+
+
         driver.findElement(By.xpath("//a[contains(@href,'basket')]")).click();
 
         Assert.assertTrue("Отсутсвует заголвок - У вас отличный вкус!",
@@ -61,6 +97,14 @@ public class FirstTest {
 
         Assert.assertFalse("Кнопка - Оплатить активна!",
                 driver.findElement(By.xpath("//button[contains(text(),'Оплатить')]")).isEnabled());
+
+        int expectedCommonAmount = 0;
+        int actualCommonAmount = Integer.parseInt(driver.findElement(By.xpath("//*[text()='Итого к оплате']/../..//span[@class][1]")).getText());
+        for (Integer amount : cart.values()){
+            expectedCommonAmount = expectedCommonAmount + amount;
+        }
+        Assert.assertTrue(String.format("Итоговое значение [%s] не равно ожидаемому значению [%s]", actualCommonAmount, expectedCommonAmount),
+                actualCommonAmount == expectedCommonAmount);
 
         driver.close();
     }
