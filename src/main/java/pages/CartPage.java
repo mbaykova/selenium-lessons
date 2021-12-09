@@ -18,6 +18,9 @@ public class CartPage extends BasePage {
     @FindBy(xpath = "//div/a[contains(@href,'product')]")
     List<WebElement> products;
 
+    @FindBy(xpath = "//*[text()='Итого к оплате']/../..//span[@class][1]")
+    WebElement commonAmount;
+
     public CartPage checkTitle() {
         try {
             Assert.assertTrue("Отсутсвует заголвок - У вас отличный вкус!",
@@ -41,5 +44,16 @@ public class CartPage extends BasePage {
     public DeliveryPage confirm(){
         confirmBtn.click();
         return new DeliveryPage();
+    }
+
+    public CartPage checkAmount(){
+        int expectedCommonAmount = 0;
+        int actualCommonAmount = Integer.parseInt(commonAmount.getText());
+        for (Integer amount : cart.values()){
+            expectedCommonAmount = expectedCommonAmount + amount;
+        }
+        Assert.assertTrue(String.format("Итоговое значение [%s] не равно ожидаемому значению [%s]", actualCommonAmount, expectedCommonAmount),
+                actualCommonAmount == expectedCommonAmount);
+        return this;
     }
 }

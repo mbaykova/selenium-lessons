@@ -18,12 +18,12 @@ public class RefactoringFirstTest extends BaseTest{
 
     @Test
     public void test() {
-        selectDish("Шефбургер Де Люкс");
-        addDishToCart("Шефбургер Де Люкс");
+        selectItem("Шефбургер Де Люкс");
+        addItemToCart("Шефбургер Де Люкс");
         driver.findElement(By.xpath("//span[contains(text(),'Доставка')]")).click();
 
-        selectDish("Песто бургер");
-        addDishToCart("Песто бургер");
+        selectItem("Песто бургер");
+        addItemToCart("Песто бургер");
 
         driver.findElement(By.xpath("//a[contains(@href,'basket')]")).click();
 
@@ -31,6 +31,14 @@ public class RefactoringFirstTest extends BaseTest{
                 driver.findElements(By.xpath("//*[text()='У вас отличный вкус!']")).size() > 0);
         Assert.assertTrue("В корзине отсутсвует блюдо - Шефбургер Де Люкс",
                 driver.findElements(By.xpath("//*[text()='Шефбургер Де Люкс']")).size() > 0);
+
+        int expectedCommonAmount = 0;
+        int actualCommonAmount = Integer.parseInt(driver.findElement(By.xpath("//*[text()='Итого к оплате']/../..//span[@class][1]")).getText());
+        for (Integer amount : cart.values()){
+            expectedCommonAmount = expectedCommonAmount + amount;
+        }
+        Assert.assertTrue(String.format("Итоговое значение [%s] не равно ожидаемому значению [%s]", actualCommonAmount, expectedCommonAmount),
+                actualCommonAmount == expectedCommonAmount);
 
         driver.findElement(By.xpath("//*[contains(text(),'Оформить')]")).click();
         fillField(By.xpath("//input[@placeholder='Улица и дом*']"),  "Россия, Москва, Тверская улица, 1");
@@ -42,16 +50,9 @@ public class RefactoringFirstTest extends BaseTest{
         Assert.assertFalse("Кнопка - Оплатить активна!",
                 driver.findElement(By.xpath("//button[contains(text(),'Оплатить')]")).isEnabled());
 
-        int expectedCommonAmount = 0;
-        int actualCommonAmount = Integer.parseInt(driver.findElement(By.xpath("//*[text()='Итого к оплате']/../..//span[@class][1]")).getText());
-        for (Integer amount : cart.values()){
-            expectedCommonAmount = expectedCommonAmount + amount;
-        }
-        Assert.assertTrue(String.format("Итоговое значение [%s] не равно ожидаемому значению [%s]", actualCommonAmount, expectedCommonAmount),
-                actualCommonAmount == expectedCommonAmount);
     }
 
-    private void selectDish(String name){
+    private void selectItem(String name){
         Integer price = Integer.valueOf(driver.findElement(By.xpath("//*[text()='" + name + "']/..//span[1]")).getText());
         if (cart.containsKey(name)) {
             cart.put(name, cart.get(name) + price);
@@ -69,7 +70,7 @@ public class RefactoringFirstTest extends BaseTest{
 
     }
 
-    private void addDishToCart(String name){
+    private void addItemToCart(String name){
         new WebDriverWait(driver, 10)
                 .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//h1[text()='" + name + "']")));
 

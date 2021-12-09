@@ -31,8 +31,8 @@ public class ProductPage extends BasePage {
         new WebDriverWait(driver, 10)
                 .ignoring(WebDriverException.class)
                 .until(d -> {
-                    ((JavascriptExecutor) d).executeScript("arguments[0].scrollIntoView(false)", addToCart);
-                    addToCart.click();
+                    ((JavascriptExecutor) d).executeScript("arguments[0].click()", addToCart);
+                  //  addToCart.click();
                     return true;
                 });
         return this;

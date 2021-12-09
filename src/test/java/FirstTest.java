@@ -11,21 +11,13 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
-public class FirstTest {
+public class FirstTest extends BaseTest{
 
 
     @Test
     public void test() {
         HashMap<String, Integer> cart = new HashMap<>();
-        System.setProperty("webdriver.chrome.driver", "drv/chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
-        driver.get("https://www.kfc.ru/");
-        driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-        driver.manage().timeouts().pageLoadTimeout(30, TimeUnit.SECONDS);
 
-        driver.findElement(By.xpath("//button[text()='Соглашаюсь']")).click();
-        driver.findElement(By.xpath("//button[text()='Да, все верно']")).click();
         Integer price = Integer.valueOf(driver.findElement(By.xpath("//*[text()='Шефбургер Де Люкс']/..//span[1]")).getText());
         if (cart.containsKey("Шефбургер Де Люкс")) {
             cart.put("Шефбургер Де Люкс", cart.get("Шефбургер Де Люкс") + price);
@@ -88,6 +80,16 @@ public class FirstTest {
         Assert.assertTrue("В корзине отсутсвует блюдо - Шефбургер Де Люкс",
                 driver.findElements(By.xpath("//*[text()='Шефбургер Де Люкс']")).size() > 0);
 
+
+        int expectedCommonAmount = 0;
+        int actualCommonAmount = Integer.parseInt(driver.findElement(By.xpath("//*[text()='Итого к оплате']/../..//span[@class][1]")).getText());
+        for (Integer amount : cart.values()){
+            expectedCommonAmount = expectedCommonAmount + amount;
+        }
+        Assert.assertTrue(String.format("Итоговое значение [%s] не равно ожидаемому значению [%s]", actualCommonAmount, expectedCommonAmount),
+                actualCommonAmount == expectedCommonAmount);
+
+
         driver.findElement(By.xpath("//*[contains(text(),'Оформить')]")).click();
         driver.findElement(By.xpath("//input[@placeholder='Улица и дом*']")).sendKeys("Россия, Москва, Тверская улица, 1");
         driver.findElement(By.xpath("//input[@placeholder='Подъезд*']")).sendKeys("1");
@@ -98,14 +100,5 @@ public class FirstTest {
         Assert.assertFalse("Кнопка - Оплатить активна!",
                 driver.findElement(By.xpath("//button[contains(text(),'Оплатить')]")).isEnabled());
 
-        int expectedCommonAmount = 0;
-        int actualCommonAmount = Integer.parseInt(driver.findElement(By.xpath("//*[text()='Итого к оплате']/../..//span[@class][1]")).getText());
-        for (Integer amount : cart.values()){
-            expectedCommonAmount = expectedCommonAmount + amount;
-        }
-        Assert.assertTrue(String.format("Итоговое значение [%s] не равно ожидаемому значению [%s]", actualCommonAmount, expectedCommonAmount),
-                actualCommonAmount == expectedCommonAmount);
-
-        driver.close();
     }
 }

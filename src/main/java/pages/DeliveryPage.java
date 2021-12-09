@@ -29,8 +29,6 @@ public class DeliveryPage extends BasePage {
     @FindBy(xpath = "//button[contains(text(),'Оплатить')]")
     WebElement payBtn;
 
-    @FindBy(xpath = "//*[text()='Итого к оплате']/../..//span[@class][1]")
-    WebElement commonAmount;
 
 
     public DeliveryPage fillForm(HashMap<String, String> fields){
@@ -58,16 +56,6 @@ public class DeliveryPage extends BasePage {
         return this;
     }
 
-    public DeliveryPage checkAmount(){
-        int expectedCommonAmount = 0;
-        int actualCommonAmount = Integer.parseInt(commonAmount.getText());
-        for (Integer amount : cart.values()){
-            expectedCommonAmount = expectedCommonAmount + amount;
-        }
-        Assert.assertTrue(String.format("Итоговое значение [%s] не равно ожидаемому значению [%s]", actualCommonAmount, expectedCommonAmount),
-                actualCommonAmount == expectedCommonAmount);
-        return this;
-    }
 
     public DeliveryPage paymentNotAvailable(){
         Assert.assertFalse("Кнопка - Оплатить активна!",

@@ -6,7 +6,7 @@ import pages.WebDriverManager;
 
 public class BaseTest {
 
-    private WebDriver driver = WebDriverManager.getDriver();
+    protected WebDriver driver = WebDriverManager.getDriver();
 
     @Before
     public void beforeMethod(){

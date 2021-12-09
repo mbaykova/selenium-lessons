@@ -25,9 +25,9 @@ public class PageObjectTest extends BaseTest {
                 .checkTitle()
                 .existProductWithName("Шефбургер Де Люкс")
                 .existProductWithName("Песто бургер")
+                .checkAmount()
                 .confirm()
                 .fillForm(fields)
-                .checkAmount()
                 .paymentNotAvailable();
 
     }
