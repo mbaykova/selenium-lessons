@@ -68,17 +68,15 @@ public class TravelsPage extends BasePage {
         dollars.click();
         dollars100.click();
         ((JavascriptExecutor) driver).executeScript("return arguments[0].scrollIntoView(false)",
-                endDate);
+                dollars100);
 
         new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOf(endDate));
-       // beginDate.findElement(By.xpath("./..")).click();
         fillField(beginDate, data.get("Дата начала"));
 
         ((JavascriptExecutor) driver).executeScript("return arguments[0].scrollIntoView(true)",
                 endDate);
         new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOf(endDate));
 
-       // endDate.findElement(By.xpath("./..")).click();
         fillField(endDate, data.get("Дата окончания"));
         ((JavascriptExecutor) driver).executeScript("return arguments[0].scrollIntoView(false)",
                 chooseProgramm);
@@ -91,11 +89,6 @@ public class TravelsPage extends BasePage {
     }
 
     public ValidatePage buyPremium() {
-//        ((JavascriptExecutor) driver).executeScript("return arguments[0].scrollIntoView(true)",
-//                buyPremium);
-//        new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOf(buyPremium));
-//        buyPremium.click();
-
         new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOf(notNeed));
         ((JavascriptExecutor) driver).executeScript("return arguments[0].click()",
                 buyPremium);

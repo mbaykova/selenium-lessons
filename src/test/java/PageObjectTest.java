@@ -1,3 +1,4 @@
+import io.qameta.allure.junit4.DisplayName;
 import org.junit.Test;
 import pages.MenuPage;
 
@@ -7,7 +8,7 @@ public class PageObjectTest extends BaseTest {
 
     MenuPage menuPage = new MenuPage();
 
-    @Test
+    @DisplayName("Добавление блюда в корзину") @Test
     public void test(){
         HashMap<String, String> fields = new HashMap<>();
         fields.put("Улица и дом", "Россия, Москва, Тверская улица, 1");

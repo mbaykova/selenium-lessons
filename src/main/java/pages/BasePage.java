@@ -1,6 +1,6 @@
 package pages;
 
-import org.openqa.selenium.By;
+import io.qameta.allure.Step;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
@@ -14,6 +14,7 @@ public class BasePage {
         PageFactory.initElements(WebDriverManager.getDriver(), this);
     }
 
+    @Step("поле {0} заполняется значением {1}")
     public void fillField(WebElement element, String value){
         element.clear();
         element.sendKeys(value);

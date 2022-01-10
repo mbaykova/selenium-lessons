@@ -1,5 +1,6 @@
 package pages;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
@@ -23,6 +24,7 @@ public class ProductPage extends BasePage {
     WebElement selectDelivery;
 
 
+    @Step("блюдо '{0}' добавлено в корзину")
     public ProductPage addDishToCart(String name) {
         WebDriver driver = WebDriverManager.getDriver();
         new WebDriverWait(driver, 10)
@@ -38,11 +40,13 @@ public class ProductPage extends BasePage {
         return this;
     }
 
+    @Step("выбран способ получения заказа - доставка")
     public MenuPage selectDelivery(){
         selectDelivery.click();
         return new MenuPage();
     }
 
+    @Step("выполнен переход в корзину")
     public CartPage goToCart(){
         goToCart.click();
         return new CartPage();

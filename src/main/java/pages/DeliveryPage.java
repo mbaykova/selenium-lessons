@@ -1,5 +1,6 @@
 package pages;
 
+import io.qameta.allure.Step;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -31,6 +32,7 @@ public class DeliveryPage extends BasePage {
 
 
 
+    @Step("форма заполняется значениями: {0}")
     public DeliveryPage fillForm(HashMap<String, String> fields){
         for (Map.Entry<String, String> field : fields.entrySet()){
             switch (field.getKey()){
@@ -57,6 +59,7 @@ public class DeliveryPage extends BasePage {
     }
 
 
+    @Step("Кнопка 'Оплатить' не активна")
     public DeliveryPage paymentNotAvailable(){
         Assert.assertFalse("Кнопка - Оплатить активна!",
                 payBtn.isEnabled());
