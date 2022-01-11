@@ -33,7 +33,7 @@ public class DeliveryPage extends BasePage {
 
 
     @Step("форма заполняется значениями: {0}")
-    public DeliveryPage fillForm(HashMap<String, String> fields){
+    public DeliveryPage fillForm(Map<String, String> fields){
         for (Map.Entry<String, String> field : fields.entrySet()){
             switch (field.getKey()){
                 case "Улица и дом" :
