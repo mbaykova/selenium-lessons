@@ -58,7 +58,7 @@ public class CartPage extends BasePage {
             expectedCommonAmount = expectedCommonAmount + amount;
         }
         Assert.assertTrue(String.format("Итоговое значение [%s] не равно ожидаемому значению [%s]", actualCommonAmount, expectedCommonAmount),
-                actualCommonAmount == expectedCommonAmount + 1);
+                actualCommonAmount == expectedCommonAmount);
         return this;
     }
 }
